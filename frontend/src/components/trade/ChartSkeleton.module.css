@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  background-color: #1e2329;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 12px;
+  gap: 10px;
+}
+
+.topBar {
+  display: flex;
+  gap: 8px;
+}
+
+.topBarItem {
+  height: 22px;
+  width: 52px;
+  background: linear-gradient(90deg, #2b3139 0%, #363d48 50%, #2b3139 100%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  background: linear-gradient(90deg, #2b3139 0%, #363d48 50%, #2b3139 100%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.label {
+  color: #848e9c;
+  font-size: 12px;
+  text-align: center;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
