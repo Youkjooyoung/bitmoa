@@ -19,21 +19,25 @@ export function useWebSocket() {
       heartbeatOutgoing: 10000,
     })
 
-    const handleMessage = (message: IMessage) => {
+    const handleDelta = (message: IMessage) => {
       try {
-        const data = JSON.parse(message.body)
-        const tickers: Ticker[] = Array.isArray(data) ? data : [data]
-        if (tickers.length === 0) return
-        useTickerStore.getState().updateTickers(tickers)
+        const payload = JSON.parse(message.body)
+        const tickers: Ticker[] = Array.isArray(payload?.tickers)
+          ? payload.tickers
+          : Array.isArray(payload)
+            ? payload
+            : [payload]
+        if (!tickers || tickers.length === 0) return
+        useTickerStore.getState().applyDelta(tickers)
       } catch (err) {
         if (process.env.NODE_ENV !== 'production') {
-          console.error('시세 메시지 파싱 실패', err, message.body)
+          console.error('시세 델타 파싱 실패', err, message.body)
         }
       }
     }
 
     client.onConnect = () => {
-      client.subscribe('/topic/ticker/all', handleMessage)
+      client.subscribe('/topic/ticker/delta', handleDelta)
     }
 
     client.onStompError = (frame) => {
@@ -42,11 +46,29 @@ export function useWebSocket() {
       }
     }
 
-    client.activate()
     clientRef.current = client
 
+    const scheduleActivate = (cb: () => void) => {
+      const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback
+      if (typeof ric === 'function') {
+        ric(cb, { timeout: 1500 })
+      } else {
+        setTimeout(cb, 300)
+      }
+    }
+
+    let activated = false
+    scheduleActivate(() => {
+      if (clientRef.current === client) {
+        client.activate()
+        activated = true
+      }
+    })
+
     return () => {
-      clientRef.current?.deactivate()
+      if (activated) {
+        clientRef.current?.deactivate()
+      }
       clientRef.current = null
     }
   }, [])
