@@ -139,6 +139,26 @@
   border-radius: 3px;
 }
 
+.coinListContainer {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.coinListContainer > div {
+  scrollbar-width: thin;
+  scrollbar-color: #3c4451 transparent;
+}
+
+.coinListContainer > div::-webkit-scrollbar {
+  width: 6px;
+}
+
+.coinListContainer > div::-webkit-scrollbar-thumb {
+  background-color: #3c4451;
+  border-radius: 3px;
+}
+
 .coinItem {
   display: grid;
   grid-template-columns: 20px minmax(0, 1fr) 72px 58px 66px;

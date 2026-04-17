@@ -2,17 +2,18 @@
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { FixedSizeList, ListChildComponentProps } from 'react-window'
 import { useCoins } from '@/hooks/useCoins'
 import { usePortfolio } from '@/hooks/usePortfolio'
 import { useTickerStore } from '@/stores/tickerStore'
 import { useMarketStore } from '@/stores/marketStore'
 import { useFavoritesStore } from '@/stores/favoritesStore'
 import { formatPrice, formatPercent } from '@/lib/utils'
+import type { Coin } from '@/types'
 import styles from './Sidebar.module.css'
 
-const INITIAL_VISIBLE = 50
-const LOAD_STEP = 30
-const SCROLL_THRESHOLD = 200
+const ROW_HEIGHT = 44
+const OVERSCAN = 5
 
 type TabKey = 'KRW' | 'BTC' | 'USDT' | 'holdings' | 'favorites'
 type SortKey = 'name' | 'price' | 'change' | 'volume'
@@ -41,6 +42,7 @@ interface CoinRowProps {
   isFavorite: boolean
   onClick: (market: string) => void
   onToggleFavorite: (market: string) => void
+  style?: React.CSSProperties
 }
 
 const CoinRow = memo(function CoinRow({
@@ -51,9 +53,11 @@ const CoinRow = memo(function CoinRow({
   isFavorite,
   onClick,
   onToggleFavorite,
+  style,
 }: CoinRowProps) {
   const ticker = useTickerStore((state) => state.tickers[market])
   const prevPriceRef = useRef<number | null>(null)
+  const flashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [flashDir, setFlashDir] = useState<'up' | 'down' | null>(null)
 
   useEffect(() => {
@@ -61,13 +65,18 @@ const CoinRow = memo(function CoinRow({
     const prev = prevPriceRef.current
     const next = ticker.tradePrice
     if (prev !== null && next !== prev) {
+      if (flashTimeoutRef.current) clearTimeout(flashTimeoutRef.current)
       setFlashDir(next > prev ? 'up' : 'down')
-      const timeout = setTimeout(() => setFlashDir(null), 450)
-      prevPriceRef.current = next
-      return () => clearTimeout(timeout)
+      flashTimeoutRef.current = setTimeout(() => setFlashDir(null), 450)
     }
     prevPriceRef.current = next
   }, [ticker?.tradePrice])
+
+  useEffect(() => {
+    return () => {
+      if (flashTimeoutRef.current) clearTimeout(flashTimeoutRef.current)
+    }
+  }, [])
 
   const changeClass = ticker
     ? ticker.changeRate > 0
@@ -93,7 +102,8 @@ const CoinRow = memo(function CoinRow({
     flashDir === 'up' ? styles.flashUp : flashDir === 'down' ? styles.flashDown : ''
 
   return (
-    <li
+    <div
+      style={style}
       className={`${styles.coinItem} ${isActive ? styles.coinItemActive : ''} ${flashClass}`}
       onClick={handleClick}
     >
@@ -121,9 +131,34 @@ const CoinRow = memo(function CoinRow({
         {ticker ? formatVolumeMillion(ticker.accTradePrice24h) : '-'}
         <span className={styles.volumeUnit}>백만</span>
       </span>
-    </li>
+    </div>
   )
 })
+
+interface VirtualRowData {
+  coins: Coin[]
+  selectedMarket: string
+  favoriteMarkets: string[]
+  onClick: (market: string) => void
+  onToggleFavorite: (market: string) => void
+}
+
+function VirtualRow({ index, style, data }: ListChildComponentProps<VirtualRowData>) {
+  const coin = data.coins[index]
+  if (!coin) return null
+  return (
+    <CoinRow
+      style={style}
+      market={coin.market}
+      koreanName={coin.koreanName}
+      englishName={coin.englishName}
+      isActive={data.selectedMarket === coin.market}
+      isFavorite={data.favoriteMarkets.includes(coin.market)}
+      onClick={data.onClick}
+      onToggleFavorite={data.onToggleFavorite}
+    />
+  )
+}
 
 interface SortHeaderProps {
   sortKey: SortKey
@@ -174,17 +209,16 @@ function SortHeader({ sortKey, sortDir, onChange }: SortHeaderProps) {
 export default function Sidebar() {
   const [searchTerm, setSearchTerm] = useState('')
   const [activeTab, setActiveTab] = useState<TabKey>('KRW')
-  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE)
   const [sortKey, setSortKey] = useState<SortKey>('volume')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
-  const listRef = useRef<HTMLUListElement>(null)
+  const [listHeight, setListHeight] = useState(600)
+  const listContainerRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   const { data: coins } = useCoins()
   const { data: portfolio } = usePortfolio()
   const { selectedMarket, setSelectedMarket } = useMarketStore()
   const tickers = useTickerStore((state) => state.tickers)
-  const tickerVersion = useTickerStore((state) => state.version)
   const favoriteMarkets = useFavoritesStore((state) => state.markets)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
 
@@ -213,7 +247,6 @@ export default function Sidebar() {
   }, [tabFilteredCoins, searchTerm])
 
   const sortedCoins = useMemo(() => {
-    void tickerVersion
     const list = [...filteredCoins]
     const dir = sortDir === 'asc' ? 1 : -1
     list.sort((a, b) => {
@@ -231,12 +264,7 @@ export default function Sidebar() {
       return (va - vb) * dir
     })
     return list
-  }, [filteredCoins, sortKey, sortDir, tickers, tickerVersion])
-
-  const visibleCoins = useMemo(
-    () => sortedCoins.slice(0, visibleCount),
-    [sortedCoins, visibleCount]
-  )
+  }, [filteredCoins, sortKey, sortDir, tickers])
 
   const handleSortChange = useCallback(
     (key: SortKey) => {
@@ -251,11 +279,14 @@ export default function Sidebar() {
   )
 
   useEffect(() => {
-    setVisibleCount(INITIAL_VISIBLE)
-    if (listRef.current) {
-      listRef.current.scrollTop = 0
-    }
-  }, [searchTerm, activeTab])
+    const el = listContainerRef.current
+    if (!el) return
+    const update = () => setListHeight(el.clientHeight)
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
@@ -269,13 +300,16 @@ export default function Sidebar() {
     [router, setSelectedMarket]
   )
 
-  const handleScroll = (e: React.UIEvent<HTMLUListElement>) => {
-    const el = e.currentTarget
-    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
-    if (distanceFromBottom < SCROLL_THRESHOLD && visibleCount < sortedCoins.length) {
-      setVisibleCount((prev) => Math.min(prev + LOAD_STEP, sortedCoins.length))
-    }
-  }
+  const rowData = useMemo<VirtualRowData>(
+    () => ({
+      coins: sortedCoins,
+      selectedMarket,
+      favoriteMarkets,
+      onClick: handleCoinClick,
+      onToggleFavorite: toggleFavorite,
+    }),
+    [sortedCoins, selectedMarket, favoriteMarkets, handleCoinClick, toggleFavorite]
+  )
 
   return (
     <aside className={styles.sidebar}>
@@ -301,35 +335,28 @@ export default function Sidebar() {
         ))}
       </div>
       <SortHeader sortKey={sortKey} sortDir={sortDir} onChange={handleSortChange} />
-      <ul ref={listRef} className={styles.coinList} onScroll={handleScroll}>
-        {visibleCoins.length === 0 ? (
-          <li className={styles.emptyState}>
+      <div ref={listContainerRef} className={styles.coinListContainer}>
+        {sortedCoins.length === 0 ? (
+          <div className={styles.emptyState}>
             {activeTab === 'favorites'
               ? '관심 코인이 없습니다.'
               : activeTab === 'holdings'
                 ? '보유 중인 코인이 없습니다.'
                 : '표시할 코인이 없습니다.'}
-          </li>
+          </div>
         ) : (
-          visibleCoins.map((coin) => (
-            <CoinRow
-              key={coin.market}
-              market={coin.market}
-              koreanName={coin.koreanName}
-              englishName={coin.englishName}
-              isActive={selectedMarket === coin.market}
-              isFavorite={favoriteMarkets.includes(coin.market)}
-              onClick={handleCoinClick}
-              onToggleFavorite={toggleFavorite}
-            />
-          ))
+          <FixedSizeList
+            height={listHeight}
+            itemCount={sortedCoins.length}
+            itemSize={ROW_HEIGHT}
+            width="100%"
+            itemData={rowData}
+            overscanCount={OVERSCAN}
+          >
+            {VirtualRow}
+          </FixedSizeList>
         )}
-        {visibleCount < sortedCoins.length && (
-          <li className={styles.loadingMore}>
-            {sortedCoins.length - visibleCount}개 더 불러오는 중...
-          </li>
-        )}
-      </ul>
+      </div>
     </aside>
   )
 }
