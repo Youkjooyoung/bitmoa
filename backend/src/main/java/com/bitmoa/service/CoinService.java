@@ -11,9 +11,11 @@ import com.bitmoa.exception.BusinessException;
 import com.bitmoa.exception.ErrorCode;
 import com.bitmoa.repository.CoinRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -22,6 +24,12 @@ public class CoinService {
 
     private final CoinRepository coinRepository;
     private final UpbitClient upbitClient;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    private static final String TICKER_KEY_PREFIX = "ticker:";
+    private static final String ORDERBOOK_KEY_PREFIX = "orderbook:";
+    private static final Duration TICKER_TTL = Duration.ofSeconds(5);
+    private static final Duration ORDERBOOK_TTL = Duration.ofSeconds(1);
 
     @Transactional(readOnly = true)
     public List<CoinResponse> findAll() {
@@ -38,7 +46,13 @@ public class CoinService {
     }
 
     public TickerResponse getTicker(String market) {
-        return upbitClient.fetchTicker(market);
+        Object cached = redisTemplate.opsForValue().get(TICKER_KEY_PREFIX + market);
+        if (cached instanceof TickerResponse ticker) {
+            return ticker;
+        }
+        TickerResponse fresh = upbitClient.fetchTicker(market);
+        redisTemplate.opsForValue().set(TICKER_KEY_PREFIX + market, fresh, TICKER_TTL);
+        return fresh;
     }
 
     public List<TickerResponse> getTickers(List<String> markets) {
@@ -46,7 +60,13 @@ public class CoinService {
     }
 
     public OrderbookResponse getOrderbook(String market) {
-        return upbitClient.fetchOrderbook(market);
+        Object cached = redisTemplate.opsForValue().get(ORDERBOOK_KEY_PREFIX + market);
+        if (cached instanceof OrderbookResponse orderbook) {
+            return orderbook;
+        }
+        OrderbookResponse fresh = upbitClient.fetchOrderbook(market);
+        redisTemplate.opsForValue().set(ORDERBOOK_KEY_PREFIX + market, fresh, ORDERBOOK_TTL);
+        return fresh;
     }
 
     public List<CandleResponse> getCandles(String market, String type, int unit, int count, String to) {
