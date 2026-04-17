@@ -13,7 +13,7 @@ public class TickerScheduler {
 
     private final TickerService tickerService;
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedDelay = 2000)
     public void broadcastTickers() {
         tickerService.broadcastTickers();
     }

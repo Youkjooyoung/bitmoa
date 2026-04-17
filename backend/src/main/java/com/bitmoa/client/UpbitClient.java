@@ -11,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -34,6 +36,24 @@ public class UpbitClient {
                     .block();
         } catch (Exception e) {
             log.error("업비트 시세 조회 실패: {}", e.getMessage());
+            throw new BusinessException(ErrorCode.UPBIT_API_ERROR);
+        }
+    }
+
+    public List<TickerResponse> fetchTickersBatched(List<List<String>> chunks, int concurrency) {
+        if (chunks == null || chunks.isEmpty()) {
+            return List.of();
+        }
+        try {
+            return Flux.fromIterable(chunks)
+                    .flatMap(chunk -> webClient.get()
+                            .uri("/ticker?markets={markets}", String.join(",", chunk))
+                            .retrieve()
+                            .bodyToFlux(TickerResponse.class), concurrency)
+                    .collectList()
+                    .block(Duration.ofSeconds(3));
+        } catch (Exception e) {
+            log.error("업비트 시세 병렬 조회 실패: {}", e.getMessage());
             throw new BusinessException(ErrorCode.UPBIT_API_ERROR);
         }
     }
