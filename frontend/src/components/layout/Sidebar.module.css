@@ -1,0 +1,280 @@
+.sidebar {
+  width: 320px;
+  height: 100%;
+  background-color: #1e2329;
+  border-right: 1px solid #2b3139;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.searchBox {
+  padding: 10px 12px;
+  border-bottom: 1px solid #2b3139;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: #2b3139;
+  border: 1px solid #3c4451;
+  border-radius: 4px;
+  color: #f0f0f0;
+  font-size: 13px;
+}
+
+.searchInput::placeholder {
+  color: #848e9c;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #f0b90b;
+}
+
+.tabBar {
+  display: flex;
+  border-bottom: 1px solid #2b3139;
+  background-color: #181b20;
+}
+
+.tabButton {
+  flex: 1;
+  padding: 9px 4px;
+  background: none;
+  border: none;
+  color: #848e9c;
+  font-size: 12px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tabButton:hover {
+  color: #f0f0f0;
+}
+
+.tabActive {
+  color: #f0f0f0;
+  font-weight: 600;
+  border-bottom-color: #f0b90b;
+}
+
+.sortHeader {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) 72px 58px 66px;
+  column-gap: 4px;
+  padding: 6px 10px;
+  border-bottom: 1px solid #2b3139;
+  background-color: #181b20;
+  align-items: center;
+}
+
+.sortStarSpacer {
+  display: inline-block;
+}
+
+.sortButton {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #848e9c;
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+  transition: color 0.15s;
+  min-width: 0;
+}
+
+.sortButtonName {
+  justify-content: flex-start;
+}
+
+.sortButtonPrice,
+.sortButtonChange,
+.sortButtonVolume {
+  justify-content: flex-end;
+}
+
+.sortButton:hover {
+  color: #f0f0f0;
+}
+
+.sortButtonActive {
+  color: #f0f0f0;
+  font-weight: 600;
+}
+
+.sortArrow {
+  font-size: 9px;
+  line-height: 1;
+  color: #f0b90b;
+}
+
+.sortArrowInactive {
+  font-size: 9px;
+  line-height: 1;
+  color: #3c4451;
+}
+
+.coinList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #3c4451 transparent;
+}
+
+.coinList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.coinList::-webkit-scrollbar-thumb {
+  background-color: #3c4451;
+  border-radius: 3px;
+}
+
+.coinItem {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) 72px 58px 66px;
+  column-gap: 4px;
+  align-items: center;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  border-bottom: 1px solid rgba(43, 49, 57, 0.4);
+  position: relative;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+}
+
+@keyframes flashBorderWhite {
+  0% { outline-color: rgba(255, 255, 255, 0.85); }
+  100% { outline-color: transparent; }
+}
+
+.flashUp,
+.flashDown {
+  animation: flashBorderWhite 0.45s ease-out;
+}
+
+.coinItem:hover {
+  background-color: #2b3139;
+}
+
+.coinItemActive {
+  background-color: rgba(240, 185, 11, 0.08);
+  border-left: 2px solid #f0b90b;
+  padding-left: 8px;
+}
+
+.starBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #3c4451;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  transition: color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.starBtn:hover {
+  color: #f0b90b;
+}
+
+.starActive {
+  color: #f0b90b;
+}
+
+.coinInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.coinName {
+  color: #f0f0f0;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.coinMarket {
+  color: #848e9c;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.priceValue {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+.changeRate {
+  font-size: 11px;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.coinVolume {
+  font-size: 11px;
+  color: #848e9c;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.volumeUnit {
+  font-size: 9px;
+  color: #6b7280;
+}
+
+.priceRise {
+  color: #c84a31;
+}
+
+.priceFall {
+  color: #1261c4;
+}
+
+.priceEven {
+  color: #f0f0f0;
+}
+
+.loadingMore {
+  padding: 12px 16px;
+  color: #848e9c;
+  font-size: 12px;
+  text-align: center;
+}
+
+.emptyState {
+  padding: 40px 16px;
+  color: #848e9c;
+  font-size: 12px;
+  text-align: center;
+}

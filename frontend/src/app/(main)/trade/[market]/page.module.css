@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  gap: 1px;
+  background-color: #2b3139;
+  overflow: hidden;
+  min-height: 520px;
+}
+
+.chartColumn {
+  flex: 1;
+  min-width: 0;
+  background-color: #1e2329;
+}
+
+.orderbookColumn {
+  width: 260px;
+  flex-shrink: 0;
+  background-color: #1e2329;
+  overflow: hidden;
+}
+
+.orderFormColumn {
+  width: 320px;
+  flex-shrink: 0;
+  background-color: #1e2329;
+  overflow-y: auto;
+}
+
+.ordersPanel {
+  height: 260px;
+  border-top: 1px solid #2b3139;
+  background-color: #1e2329;
+  flex-shrink: 0;
+}

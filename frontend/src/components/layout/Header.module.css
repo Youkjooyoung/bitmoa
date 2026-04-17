@@ -1,0 +1,153 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 24px;
+  background-color: #1e2329;
+  border-bottom: 1px solid #2b3139;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f0b90b;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navLink {
+  color: #848e9c;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #f0f0f0;
+}
+
+.navLinkActive {
+  color: #f0b90b;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.balanceBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.eyeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: #848e9c;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.eyeButton:hover {
+  color: #f0f0f0;
+  background-color: #2b3139;
+}
+
+.balanceButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #f0f0f0;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.balanceButton:hover {
+  border-color: #2b3139;
+  background-color: #2b3139;
+}
+
+.balanceLabel {
+  color: #848e9c;
+  font-size: 13px;
+}
+
+.balanceValue {
+  color: #f0f0f0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.caret {
+  color: #848e9c;
+}
+
+.currencyMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  padding: 4px;
+  background-color: #2b3139;
+  border: 1px solid #3c4451;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.currencyItem {
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #f0f0f0;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.currencyItem:hover {
+  background-color: #3c4451;
+}
+
+.currencyItemActive {
+  color: #f0b90b;
+  background-color: #3c4451;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f0f0f0;
+  font-size: 14px;
+}
+
+.authButtons {
+  display: flex;
+  gap: 12px;
+}

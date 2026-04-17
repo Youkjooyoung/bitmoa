@@ -1,0 +1,36 @@
+spring:
+  profiles:
+    active: local
+
+  application:
+    name: bitmoa
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET:default-secret-key-for-development-only-change-in-production}
+  access-token-validity: 1800000
+  refresh-token-validity: 604800000
+
+upbit:
+  api:
+    base-url: https://api.upbit.com/v1
+    ws-url: wss://api.upbit.com/websocket/v1
+
+app:
+  fee-rate: 0.0005
+  initial-balance: 10000000

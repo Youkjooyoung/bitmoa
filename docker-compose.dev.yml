@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: bitmoa-postgres-dev
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: bitmoa
+      POSTGRES_USER: bitmoa
+      POSTGRES_PASSWORD: bitmoa123
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bitmoa -d bitmoa"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bitmoa-dev-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: bitmoa-redis-dev
+    ports:
+      - "6382:6379"
+    volumes:
+      - redis_dev_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bitmoa-dev-network
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:
+
+networks:
+  bitmoa-dev-network:
+    driver: bridge

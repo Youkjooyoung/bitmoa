@@ -1,0 +1,119 @@
+.container {
+  background-color: #1e2329;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.strengthBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid #2b3139;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.strengthLabel {
+  color: #848e9c;
+}
+
+.strengthValue {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.strengthBuy {
+  color: #c84a31;
+}
+
+.strengthSell {
+  color: #1261c4;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 64px 1fr 1fr;
+  padding: 8px 12px;
+  border-bottom: 1px solid #2b3139;
+  font-size: 11px;
+  color: #848e9c;
+  flex-shrink: 0;
+}
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #3c4451 transparent;
+}
+
+.list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background-color: #3c4451;
+  border-radius: 3px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 64px 1fr 1fr;
+  padding: 4px 12px;
+  font-size: 12px;
+  align-items: center;
+  transition: background-color 0.15s;
+}
+
+.row:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.rowAsk {
+  background-color: rgba(18, 97, 196, 0.04);
+}
+
+.rowBid {
+  background-color: rgba(200, 74, 49, 0.04);
+}
+
+.colTime {
+  color: #848e9c;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+}
+
+.colPrice {
+  text-align: right;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.colSize {
+  text-align: right;
+  color: #f0f0f0;
+  font-variant-numeric: tabular-nums;
+}
+
+.priceRise {
+  color: #c84a31;
+}
+
+.priceFall {
+  color: #1261c4;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #848e9c;
+  font-size: 13px;
+}

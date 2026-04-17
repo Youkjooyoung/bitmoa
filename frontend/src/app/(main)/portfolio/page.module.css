@@ -1,0 +1,177 @@
+.container {
+  padding: 24px;
+}
+
+.title {
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #f0f0f0;
+}
+
+.summaryCards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.card {
+  padding: 20px;
+  background-color: #1e2329;
+  border-radius: 8px;
+}
+
+.cardLabel {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #848e9c;
+}
+
+.cardValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f0f0f0;
+}
+
+.cardValueRise {
+  color: #c84a31;
+}
+
+.cardValueFall {
+  color: #1261c4;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #f0f0f0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1e2329;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table th {
+  padding: 14px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #848e9c;
+  text-align: left;
+  background-color: #2b3139;
+}
+
+.table td {
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #f0f0f0;
+  border-bottom: 1px solid #2b3139;
+}
+
+.profitRise {
+  color: #c84a31;
+}
+
+.profitFall {
+  color: #1261c4;
+}
+
+.empty {
+  padding: 40px;
+  text-align: center;
+  color: #848e9c;
+  font-size: 14px;
+}
+
+.resetButton {
+  padding: 8px 16px;
+  background-color: #f0b90b;
+  border: none;
+  border-radius: 4px;
+  color: #1e2329;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.resetButton:hover {
+  opacity: 0.9;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.pieBlock {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: #1e2329;
+  border-radius: 8px;
+}
+
+.legend {
+  flex: 1;
+  min-width: 0;
+}
+
+.legendTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.legendTable th {
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #848e9c;
+  text-align: left;
+  border-bottom: 1px solid #2b3139;
+}
+
+.legendTable td {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #f0f0f0;
+  border-bottom: 1px solid #2b3139;
+}
+
+.legendTable tr:last-child td {
+  border-bottom: none;
+}
+
+.swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.numCol {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+  .pieBlock {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .legend {
+    width: 100%;
+  }
+}

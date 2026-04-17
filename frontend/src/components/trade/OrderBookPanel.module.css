@@ -1,0 +1,42 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #1e2329;
+  overflow: hidden;
+}
+
+.tabBar {
+  display: flex;
+  border-bottom: 1px solid #2b3139;
+  background-color: #181b20;
+  flex-shrink: 0;
+}
+
+.tabButton {
+  flex: 1;
+  padding: 10px 8px;
+  background: none;
+  border: none;
+  color: #848e9c;
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tabButton:hover {
+  color: #f0f0f0;
+}
+
+.tabActive {
+  color: #f0f0f0;
+  font-weight: 600;
+  border-bottom-color: #f0b90b;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}

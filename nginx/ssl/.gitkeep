@@ -1,0 +1,7 @@
+# SSL 인증서 디렉토리
+# 프로덕션 배포 시 이 디렉토리에 SSL 인증서를 배치합니다.
+# - fullchain.pem: 인증서 체인
+# - privkey.pem: 개인 키
+#
+# Let's Encrypt 사용 시:
+# certbot certonly --webroot -w /var/www/html -d bitmoa.com -d www.bitmoa.com

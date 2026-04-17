@@ -1,0 +1,19 @@
+.pieWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #2b3139;
+  border: 1px dashed #3c4451;
+}
+
+.emptyText {
+  color: #848e9c;
+  font-size: 12px;
+}

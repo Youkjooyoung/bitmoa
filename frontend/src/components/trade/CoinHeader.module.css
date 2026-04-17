@@ -1,0 +1,74 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 20px;
+  background-color: #1e2329;
+  border-bottom: 1px solid #2b3139;
+}
+
+.coinInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.coinName {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f0f0f0;
+}
+
+.coinMarket {
+  font-size: 14px;
+  color: #848e9c;
+}
+
+.priceSection {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.price {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.priceRise {
+  color: #c84a31;
+}
+
+.priceFall {
+  color: #1261c4;
+}
+
+.priceEven {
+  color: #f0f0f0;
+}
+
+.change {
+  font-size: 14px;
+}
+
+.stats {
+  display: flex;
+  gap: 32px;
+  margin-left: auto;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #848e9c;
+}
+
+.statValue {
+  font-size: 14px;
+  color: #f0f0f0;
+}
